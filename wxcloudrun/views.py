@@ -1,9 +1,13 @@
 from datetime import datetime
+
 from flask import render_template, request
+
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.model import Counters
-from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, make_comm_response
+from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response, \
+    make_comm_xml_response
+from wxcloudrun.xml_util import XMLGenerator
 
 
 @app.route('/')
@@ -68,6 +72,11 @@ def get_count():
 
 @app.route('/api/wxmsg', methods=['POST'])
 def reply_msg():
+    xml_gen = XMLGenerator('xml')
+
     msg = request.get_json()
-    print(msg)
-    return make_comm_response(msg)
+    print(msg['ToUserName'])
+    # Convert msg to string
+
+    recall_xml = xml_gen.generate_xml(msg['ToUserName'],msg['FromUserName'], str(msg))
+    return make_comm_xml_response(recall_xml)

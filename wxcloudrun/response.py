@@ -18,5 +18,10 @@ def make_err_response(err_msg):
     return Response(data, mimetype='application/json')
 
 
-def make_comm_response(msg):
-    return Response(msg, mimetype='application/json')
+def make_comm_json_response(msg):
+    data = json.dumps(msg)
+    return Response(data, mimetype='application/json')
+
+
+def make_comm_xml_response(msg):
+    return Response(msg, mimetype='application/xml')
